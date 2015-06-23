@@ -1,0 +1,60 @@
+sudo hostnamectl set-hostname "host.domain" --static
+
+sudo yum update
+sudo yum groupinstall "C Development Tools and Libraries"
+sudo yum groupinstall "Development Tools"
+sudo yum groupinstall "Administration Tools"
+#sudo yum groupinstall "Editors"
+#sudo yum groupinstall "Office/Productivity"
+
+sudo yum install \
+firewall-config \
+kernel-devel kernel-headers \
+scribus inkscape gimp \
+gcc-gfortran \
+gitg \
+freerdp \
+emacs \
+texlive \
+picard \
+gtkpod \
+perl-Image-ExifTool \
+pdfshuffler \
+exfat-utils \
+lame vorbis-tools flac cdrdao
+
+sudo /bin/bash -c 'echo "[google-chrome]
+name=google-chrome - \$basearch
+baseurl=http://dl.google.com/linux/chrome/rpm/stable/\$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub
+" > /etc/yum.repos.d/google-chrome.repo'
+sudo yum install google-chrome-stable
+
+sudo yum localinstall --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+sudo yum install libdvdread libdvdcss libdvdnav gstreamer-plugins-ugly gstreamer-plugins-bad gstreamer-plugins-ugly audacious-plugins-freeworld-mp3 dvdrip mplayer ffmpeg xvid4conf lsdvd ogmtools mjpegtools xine
+
+sudo wget -O /etc/yum.repos.d/virtualbox.repo http://download.virtualbox.org/virtualbox/rpm/fedora/virtualbox.repo
+sudo yum install VirtualBox kmod-VirtualBox
+
+echo '[rchen@localhost ~]$ diff -u ssh_config /etc/ssh/ssh_config 
+--- a/ssh_config	2015-03-03 18:39:48.559994540 -0500
++++ b/ssh_config	2015-03-03 18:38:23.216973525 -0500
+@@ -18,8 +18,10 @@
+ # ssh_config(5) man page.
+ 
+ # Host *
++    VerifyHostKeyDNS yes
+ #   ForwardAgent no
+ #   ForwardX11 no
++    ForwardX11 yes
+ #   RhostsRSAAuthentication no
+ #   RSAAuthentication yes
+ #   PasswordAuthentication yes
+' | patch -p1 --directory=/etc/ssh
+sudo systemctl enable sshd
+
+sudo yum install bind-chroot
+sudo systemctl enable named-chroot
+
