@@ -1,0 +1,5 @@
+[user]
+	email = rchen@cs.umd.edu
+	name = Ray Chen
+[push]
+	default = simple
