@@ -37,3 +37,21 @@
     (fill-region (region-beginning) (region-end) nil)))
 
 (global-auto-revert-mode)
+
+;; Change text color (rather than backgrounds, which is the default
+;; for Fedora distributions).
+(custom-set-faces
+ '(diff-added       ((t (:foreground "Green"  :background "None"))) 'now)
+ '(diff-removed     ((t (:foreground "Red"    :background "None"))) 'now)
+ '(diff-file-header ((t (:foreground "Orange" :background "None"))) 'now)
+ '(diff-context     ((t (:foreground "Grey50" :background "None"))) 'now)
+ '(diff-hunk-header ((t (:foreground "Purple" :background "None"))) 'now)
+ '(diff-header      ((t (:foreground "Blue"   :background "None"))) 'now)
+ ;; diff-changed
+ ;; diff-context
+ ;; diff-index
+ ;; diff-indicator-added
+ ;; diff-indicator-changed
+ ;; diff-indicator-removed
+ ;; diff-nonexistent
+ )
