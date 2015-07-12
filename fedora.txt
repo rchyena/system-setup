@@ -22,10 +22,12 @@ sudo dnf install \
      gimp \
      gitg \
      gnome-tweak-tool \
+     gnuplot \
      gtkpod \
      inkscape \
      kernel-devel \
      kernel-headers \
+     livecd-tools \
      mpich \
      mpich-devel \
      pdfshuffler \
