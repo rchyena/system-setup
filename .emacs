@@ -55,4 +55,12 @@
  ;; diff-indicator-changed
  ;; diff-indicator-removed
  ;; diff-nonexistent
+
+ '(font-lock-function-name-face ((t (:foreground "#0070FF"))) 'now)
+ '(font-lock-variable-name-face ((t (:foreground "DarkOrange3"))) 'now)
+ '(font-lock-comment-face       ((t (:foreground "Red3"))) 'now)
+ '(font-lock-string-face        ((t (:foreground "MediumOrchid"))) 'now)
+ '(font-lock-keyword-face       ((t (:foreground "MediumOrchid"))) 'now)
  )
+
+(set-face-foreground 'minibuffer-prompt "#0070FF")
