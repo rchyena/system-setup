@@ -80,9 +80,53 @@ sudo dnf install \
      mjpegtools \
      xine
 
+# For VirtualBox.
 sudo wget -O /etc/yum.repos.d/virtualbox.repo http://download.virtualbox.org/virtualbox/rpm/fedora/virtualbox.repo
 sudo dnf install VirtualBox
 
+# For Skype.
+sudo mkdir -p /usr/local/packages
+wget -q -O - http://www.skype.com/go/getskype-linux-dynamic -- \
+     | sudo tar -C /usr/local/packages -jxvf -
+sudo dnf install \
+     alsa-lib.i686 \
+     fontconfig.i686 \
+     freetype.i686 \
+     glib2.i686 \
+     libSM.i686 \
+     libXScrnSaver.i686 \
+     libXi.i686 \
+     libXrandr.i686 \
+     libXrender.i686 \
+     libXv.i686 \
+     libstdc++.i686 \
+     pulseaudio-libs.i686 \
+     qt.i686 \
+     qt-x11.i686 \
+     qtwebkit.i686 \
+     zlib.i686
+
+SKYPE_HOME=$(ls -dtr /usr/local/packages/skype-* | head -1)
+
+pushd /usr/local/share/applications
+ln -s "../../packages/$SKYPE_HOME/skype.desktop"
+popd
+
+for i in 16x16 24x24 32x32 48x48 64x64 96x96 128x128 256x256; do
+    mkdir -p /usr/local/share/icons/hicolor/$i
+    pushd /usr/local/share/icons/hicolor/$i
+    ln -s ../../../../packages/$SKYPE_HOME/SkypeBlue_$i.png
+    popd
+done
+
+sudo /bin/bash -c "echo '#!/bin/sh
+export SKYPE_HOME=\"$SKYPE_HOME\"
+
+\"\$SKYPE_HOME/skype\" --resources=\"\$SKYPE_HOME\" \$*'
+" > /usr/local/bin/skype
+sudo chmod 755 /usr/local/bin/skype
+
+# Update SSH client from default configuration.
 echo '--- a/ssh_config	2015-03-03 18:39:48.559994540 -0500
 +++ b/ssh_config	2015-03-03 18:38:23.216973525 -0500
 @@ -18,8 +18,10 @@
