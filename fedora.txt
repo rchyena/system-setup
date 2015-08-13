@@ -11,6 +11,7 @@ sudo dnf groupinstall "Editors"
 sudo dnf groupinstall "Office/Productivity"
 
 sudo dnf install \
+     audacity \
      emacs \
      emacs-nox \
      exfat-utils \
@@ -36,6 +37,7 @@ sudo dnf install \
      rawtherapee \
      scribus \
      texlive \
+     texlive-xtab \
      unbound \
      vorbis-tools \
 
