@@ -37,6 +37,7 @@
     (fill-region (region-beginning) (region-end) nil)))
 
 (global-auto-revert-mode)
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;; Change text color (rather than backgrounds, which is the default
 ;; for Fedora distributions).
