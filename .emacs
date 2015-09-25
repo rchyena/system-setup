@@ -26,6 +26,31 @@
 (add-hook 'tcl-mode-hook 'flyspell-prog-mode)
 (add-hook 'text-mode-hook 'flyspell-mode)
 
+;; Use the startup directory to store Emacs desktop session files.
+(setq desktop-dirname default-directory)
+
+(defun session-exists ()
+  (file-exists-p (concat desktop-dirname ".emacs.desktop")))
+
+(defun session-load ()
+  "Restore a saved emacs session."
+  (interactive)
+  (if (session-exists)
+      (desktop-read desktop-dirname)
+    (message "No desktop found.")))
+
+(defun session-save ()
+  "Save an emacs session."
+  (interactive)
+  (desktop-save-in-desktop-dir))
+
+;; Ask user whether to restore desktop at start-up
+(add-hook 'after-init-hook
+          '(lambda ()
+             (if (session-exists)
+                 (if (y-or-n-p "Restore desktop session? ")
+                     (session-load)))))
+
 (defun unfill-paragraph ()
   (interactive)
   (let ((fill-column (point-max)))
