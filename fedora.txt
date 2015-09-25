@@ -37,6 +37,10 @@ sudo dnf install \
      rawtherapee \
      scribus \
      texlive \
+     texlive-adjustbox \
+     texlive-multirow \
+     texlive-sectsty \
+     texlive-tocloft \
      texlive-xtab \
      unbound \
      vorbis-tools \
