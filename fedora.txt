@@ -14,11 +14,9 @@ sudo dnf install \
      audacity \
      emacs \
      emacs-nox \
-     exfat-utils \
      firewall-config \
      flac \
      freerdp \
-     fuse-exfat \
      gcc-gfortran \
      gimp \
      gitg \
