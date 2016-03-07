@@ -12,6 +12,7 @@ sudo dnf groupinstall "Office/Productivity"
 
 sudo dnf install \
      audacity \
+     cmake \
      emacs \
      emacs-nox \
      firewall-config \
@@ -32,6 +33,7 @@ sudo dnf install \
      pdfshuffler \
      perl-Image-ExifTool \
      picard \
+     python-sphinx_rtd_theme \
      rawtherapee \
      scribus \
      texlive \
@@ -41,6 +43,7 @@ sudo dnf install \
      texlive-tocloft \
      texlive-xtab \
      unbound \
+     python-sphinx \
      vorbis-tools \
 
 sudo systemctl enable unbound
