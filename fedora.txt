@@ -1,40 +1,45 @@
 sudo hostnamectl set-hostname "host.domain" --static
 
 sudo dnf update
+
 sudo dnf groupinstall "C Development Tools and Libraries"
 sudo dnf groupinstall "Development Tools"
-sudo dnf groupinstall "System Tools"
-sudo dnf groupinstall "Authoring and Publishing"
-sudo dnf groupinstall "Administration Tools"
-sudo dnf groupinstall "LibreOffice"
-sudo dnf groupinstall "Editors"
-sudo dnf groupinstall "Office/Productivity"
-
 sudo dnf install \
-     audacity \
      cmake \
-     emacs \
-     emacs-nox \
-     firewall-config \
-     flac \
-     freerdp \
      gcc-gfortran \
-     gimp \
      gitg \
-     gnome-tweak-tool \
-     gnuplot \
-     gtkpod \
-     inkscape \
      kernel-devel \
      kernel-headers \
-     livecd-tools \
      mpich \
      mpich-devel \
-     pdfshuffler \
+
+sudo dnf groupinstall "System Tools"
+sudo dnf install \
+     freerdp \
+     gnome-tweak-tool \
+     livecd-tools \
+     unbound \
+
+sudo systemctl enable unbound
+
+sudo dnf groupinstall "Administration Tools"
+sudo dnf install \
+     firewall-config \
+
+sudo dnf groupinstall "Editors"
+sudo dnf groupinstall "LibreOffice"
+sudo dnf install \
+     emacs \
+     emacs-nox \
+
+sudo dnf groupinstall "Authoring and Publishing"
+sudo dnf install \
+     gimp \
+     gnuplot \
+     inkscape \
      perl-Image-ExifTool \
-     picard \
+     pdfshuffler \
      python-sphinx_rtd_theme \
-     rawtherapee \
      scribus \
      texlive \
      texlive-adjustbox \
@@ -42,11 +47,16 @@ sudo dnf install \
      texlive-sectsty \
      texlive-tocloft \
      texlive-xtab \
-     unbound \
      python-sphinx \
-     vorbis-tools \
+     rawtherapee \
 
-sudo systemctl enable unbound
+sudo dnf groupinstall "Sound and Video"
+sudo dnf install \
+     audacity \
+     flac \
+     gtkpod \
+     picard \
+     vorbis-tools \
 
 sudo /bin/bash -c "echo > /etc/yum.repos.d/google-chrome.repo" << EOF
 [google-chrome]
