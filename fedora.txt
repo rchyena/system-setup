@@ -115,21 +115,22 @@ sudo dnf install \
 SKYPE_HOME=$(ls -dtr /usr/local/packages/skype-* | head -1)
 
 pushd /usr/local/share/applications
-ln -s "../../packages/$SKYPE_HOME/skype.desktop"
+sudo ln -s "../../packages/$(basename $SKYPE_HOME)/skype.desktop"
 popd
 
 for i in 16x16 24x24 32x32 48x48 64x64 96x96 128x128 256x256; do
-    mkdir -p /usr/local/share/icons/hicolor/$i
+    sudo mkdir -p /usr/local/share/icons/hicolor/$i
     pushd /usr/local/share/icons/hicolor/$i
-    ln -s ../../../../packages/$SKYPE_HOME/SkypeBlue_$i.png
+    sudo ln -s ../../../../packages/$(basename $SKYPE_HOME)/icons/SkypeBlue_$i.png
     popd
 done
 
-sudo /bin/bash -c "echo '#!/bin/sh
-export SKYPE_HOME=\"$SKYPE_HOME\"
+sudo bash -c "cat > /usr/local/bin/skype" << EOF
+#!/bin/sh
+export SKYPE_HOME="$SKYPE_HOME"
 
-\"\$SKYPE_HOME/skype\" --resources=\"\$SKYPE_HOME\" \$*'
-" > /usr/local/bin/skype
+"\$SKYPE_HOME/skype" --resources="\$SKYPE_HOME" \$*
+EOF
 sudo chmod 755 /usr/local/bin/skype
 
 # Update SSH client from default configuration.
