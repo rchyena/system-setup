@@ -47,13 +47,14 @@ sudo dnf install \
 
 sudo systemctl enable unbound
 
-sudo /bin/bash -c 'echo "[google-chrome]
+sudo /bin/bash -c "echo > /etc/yum.repos.d/google-chrome.repo" << EOF
+[google-chrome]
 name=google-chrome - \$basearch
 baseurl=http://dl.google.com/linux/chrome/rpm/stable/\$basearch
 enabled=1
 gpgcheck=1
 gpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub
-" > /etc/yum.repos.d/google-chrome.repo'
+EOF
 sudo dnf install google-chrome-stable
 
 sudo dnf install --nogpgcheck \
@@ -134,7 +135,8 @@ EOF
 sudo chmod 755 /usr/local/bin/skype
 
 # Update SSH client from default configuration.
-echo '--- a/ssh_config	2015-03-03 18:39:48.559994540 -0500
+sudo patch -p1 --directory=/etc/ssh << EOF
+--- a/ssh_config	2015-03-03 18:39:48.559994540 -0500
 +++ b/ssh_config	2015-03-03 18:38:23.216973525 -0500
 @@ -18,8 +18,10 @@
  # ssh_config(5) man page.
@@ -147,4 +149,4 @@ echo '--- a/ssh_config	2015-03-03 18:39:48.559994540 -0500
  #   RhostsRSAAuthentication no
  #   RSAAuthentication yes
  #   PasswordAuthentication yes
-' | sudo patch -p1 --directory=/etc/ssh
+EOF
