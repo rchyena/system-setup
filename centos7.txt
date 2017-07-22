@@ -1,0 +1,80 @@
+sudo yum update
+
+sudo yum groupinstall "Server with GUI"
+sudo yum groupinstall "GNOME Desktop"
+sudo yum groupinstall "Development Tools"
+sudo yum groupinstall "System Administration Tools"
+
+sudo yum install epel-release
+
+sudo yum install \
+     gitg \
+     gnuplot \
+     R \
+     texlive \
+
+# To support Morituri (https://github.com/thomasvs/morituri.git)
+sudo yum install \
+     cdparanoia \
+     cdrdao \
+     flac \
+     gstreamer-python \
+     picard \
+     pycdio \
+     vorbis-tools \
+
+sudo /bin/bash -c "cat > /etc/yum.repos.d/google-chrome.repo" << EOF
+[google-chrome]
+name=google-chrome - \$basearch
+baseurl=http://dl.google.com/linux/chrome/rpm/stable/\$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub
+EOF
+sudo yum install google-chrome-stable
+
+sudo yum localinstall --nogpgcheck \
+     https://download1.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm \
+     https://download1.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-7.noarch.rpm
+
+sudo yum install \
+     libdvdread \
+     libdvdnav \
+     gstreamer-plugins-ugly \
+     gstreamer-plugins-bad \
+     gstreamer-plugins-ugly \
+     gstreamer1 \
+     gstreamer1-libav \
+     gstreamer1-plugins-bad-free \
+     gstreamer1-plugins-bad-free-extras \
+     gstreamer1-plugins-bad-freeworld \
+     gstreamer1-plugins-base \
+     gstreamer1-plugins-base-tools \
+     gstreamer1-plugins-good \
+     gstreamer1-plugins-good-extras \
+     gstreamer1-plugins-ugly \
+     audacious-plugins-freeworld-mp3 \
+     dvdrip \
+     mplayer \
+     ffmpeg \
+     xvid4conf \
+     lsdvd \
+     ogmtools \
+     mjpegtools
+
+# Update SSH client from default configuration.
+sudo patch -p1 --directory=/etc/ssh << EOF
+--- a/ssh_config        2015-03-03 18:39:48.559994540 -0500
++++ b/ssh_config        2015-03-03 18:38:23.216973525 -0500
+@@ -18,8 +18,10 @@
+ # ssh_config(5) man page.
+ 
+ # Host *
++    VerifyHostKeyDNS yes
+ #   ForwardAgent no
+ #   ForwardX11 no
++    ForwardX11 yes
+ #   RhostsRSAAuthentication no
+ #   RSAAuthentication yes
+ #   PasswordAuthentication yes
+EOF
