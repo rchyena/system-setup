@@ -1,0 +1,30 @@
+sudo firewall-cmd --zone=public --add-port=9000/tcp --permanent
+sudo firewall-cmd --zone=public --add-port=3483/tcp --permanent
+sudo firewall-cmd --zone=public --add-port=3483/udp --permanent
+
+sudo useradd --system --shell /bin/false --home /home/slim --create-home slim
+sudo usermod --append --groups shared slim
+
+# Get URL from http://downloads.slimdevices.com/nightly/index.php?ver=7.9
+sudo -u slim wget --directory-prefix=/home/slim <LATEST_URL>
+sudo -u slim tar -C /home/slim -zxf <DOWNLOADED_FILE>
+sudo -u slim ln -sf <TAR_EXTRACTED_DIR> /home/slim/logitechmediaserver
+sudo tee /home/slim/slimserver.service <<EOF
+[Unit]
+Description=Logitech Media Server (Slimserver)
+After=network.target
+
+[Service]
+Type=simple
+User=slim
+Group=slim
+ExecStart=/home/slim/logitechmediaserver/slimserver.pl --prefsdir=/home/slim/prefs --cachedir=/home/slim/cache --logdir=/home/slim/log --norestart
+WorkingDirectory=/home/slim
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
+EOF
+
+sudo systemctl enable /home/slim/slimserver.service
+sudo systemctl start slimserver
