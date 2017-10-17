@@ -29,6 +29,7 @@ SYSCONFIG_FILES=$(echo \
     etc/ssh/sshd_config \
     etc/ssh/*_key \
     etc/ssh/*.pub \
+    home/rchen/.ssh/authorized_keys \
     )
 
 LOGWATCH_FILES=$(echo \
@@ -57,6 +58,7 @@ POSTFIX_FILES=$(echo \
     etc/postfix/sender_bcc \
     etc/postfix/senders \
     etc/postfix/virtual \
+    etc/systemd/system/postsrsd \
     )
 
 ALL_FILES=$(echo \
@@ -96,16 +98,32 @@ restore()
     yum -y install epel-release
 
     yum -y install \
+        bind-chroot \
+        bind-utils \
+        cmake \
+        chrony \
+        cyrus-sasl \
+        cyrus-sasl-plain \
         drupal7 \
         emacs \
+        gcc \
+        git \
+        help2man \
         httpd \
+        logrotate \
+        logwatch \
         mariadb \
         nmap \
+        postfix \
         screen \
+        strace \
         tcpdump \
+        unbound \
         whois \
 
     yum -y update
+    yum -y reinstall polkit
+    systemctl start polkit
 
     # ------------
     # Backup Files
@@ -135,11 +153,6 @@ restore()
         ip -6 address add [IPv6 ADDR] dev enp0s3
     fi
 
-    # ----------------
-    # Restore Accounts
-    # ----------------
-    tar -C / -zxvf $BASENAME.tar.gz $ACCOUNT_FILES
-
     # ----------------------------
     # Restore System Configuration
     # ----------------------------
@@ -150,6 +163,7 @@ restore()
 
     hostnamectl set-hostname $(cat /etc/hostname) --static
     systemctl restart sshd
+    systemctl start   chronyd
 
     # ----------------
     # Restore Logwatch
@@ -187,6 +201,7 @@ restore()
     yum -y install \
         cmake \
         cyrus-sasl \
+        cyrus-sasl-plain \
         gcc \
         git \
         help2man \
@@ -210,12 +225,29 @@ restore()
     make -C /etc/postfix
     newaliases
 
-    systemctl enable $POSTSRSD_DIR/etc/systemd/system/postsrsd.service
+    systemctl enable postsrsd
     systemctl start  postsrsd
     systemctl enable saslauthd
     systemctl start  saslauthd
     systemctl enable postfix
     systemctl start  postfix
+
+    # ---------------------------------------------
+    # Create Patches for Manual Account Restoration
+    # ---------------------------------------------
+    echo
+    TMPDIR=$(mktemp -d)
+    tar -C $TMPDIR -zxvf $BASENAME.tar.gz $ACCOUNT_FILES
+    for i in $ACCOUNT_FILES; do
+        sort $TMPDIR/$i > $TMPDIR/$i.restore
+        sort /$i        > $TMPDIR/$i.system
+        diff -ubwi $TMPDIR/$i.system $TMPDIR/$i.restore > /$i.patch
+        echo Created /$i.patch
+    done
+    rm -rf $TMPDIR
+
+    echo
+    echo System files restored.  You must reboot to complete the restoration.
 }
 
 case "$CMD" in
