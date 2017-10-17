@@ -58,7 +58,7 @@ POSTFIX_FILES=$(echo \
     etc/postfix/sender_bcc \
     etc/postfix/senders \
     etc/postfix/virtual \
-    etc/systemd/system/postsrsd \
+    etc/systemd/system/postsrsd.service \
     )
 
 ALL_FILES=$(echo \
