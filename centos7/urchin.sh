@@ -241,8 +241,9 @@ restore()
     for i in $ACCOUNT_FILES; do
         sort $TMPDIR/$i > $TMPDIR/$i.restore
         sort /$i        > $TMPDIR/$i.system
-        diff -ubwi $TMPDIR/$i.system $TMPDIR/$i.restore > /$i.patch
-        echo Created /$i.patch
+        if diff -ubwi $TMPDIR/$i.system $TMPDIR/$i.restore > /$i.patch; then
+            echo Created /$i.patch
+        fi
     done
     rm -rf $TMPDIR
 
