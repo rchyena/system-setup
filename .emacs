@@ -14,6 +14,11 @@
 (setq frame-title-format
       (concat  "%b - emacs@" system-name))
 
+;; Add Chapel mode
+(load-file "~/.local/packages/Emacs-Chapel-Mode/chapel-mode.el")
+(autoload 'chapel-mode "chapel-mode" "Chapel enhanced cc-mode" t)
+(add-to-list 'auto-mode-alist '("\\.chpl$" . chapel-mode))
+
 ;; My defaults
 (setq-default major-mode 'text-mode)
 (setq-default indent-tabs-mode nil)
@@ -26,8 +31,13 @@
 (add-hook 'tcl-mode-hook 'flyspell-prog-mode)
 (add-hook 'text-mode-hook 'flyspell-mode)
 
+;; Disable default "newline-and-indent" behavior.
+(when (fboundp 'electric-indent-mode) (electric-indent-mode -1))
+
 ;; Use the startup directory to store Emacs desktop session files.
 (setq desktop-dirname default-directory)
+(setq desktop-restore-forces-onscreen nil)
+(setq session-loaded nil)
 
 (defun session-exists ()
   (file-exists-p (concat desktop-dirname ".emacs.desktop")))
@@ -36,7 +46,7 @@
   "Restore a saved emacs session."
   (interactive)
   (if (session-exists)
-      (desktop-read desktop-dirname)
+      (setq session-loaded (desktop-read desktop-dirname))
     (message "No desktop found.")))
 
 (defun session-save ()
@@ -44,12 +54,19 @@
   (interactive)
   (desktop-save-in-desktop-dir))
 
-;; Ask user whether to restore desktop at start-up
+;; Ask user whether to restore desktop at start-up.
 (add-hook 'after-init-hook
           '(lambda ()
              (if (session-exists)
                  (if (y-or-n-p "Restore desktop session? ")
                      (session-load)))))
+
+;; Update the session if the buffer-list changes.
+(add-hook 'kill-emacs-query-functions
+          '(lambda ()
+             (if (and (session-exists) session-loaded)
+                 (desktop-save-in-desktop-dir)
+                 t)))
 
 (defun unfill-paragraph ()
   (interactive)
@@ -62,30 +79,24 @@
     (fill-region (region-beginning) (region-end) nil)))
 
 (global-auto-revert-mode)
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
+;(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
-;; Change text color (rather than backgrounds, which is the default
-;; for Fedora distributions).
+;; Add the Solarized color theme.
+(add-to-list 'custom-theme-load-path
+             "~/.local/packages/emacs-color-theme-solarized")
+(load-theme 'solarized t)
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(frame-background-mode (quote dark))
+ '(safe-local-variable-values (quote ((make-backup-files)))))
+
 (custom-set-faces
- '(diff-added       ((t (:foreground "Green"  :background "None"))) 'now)
- '(diff-removed     ((t (:foreground "Red"    :background "None"))) 'now)
- '(diff-file-header ((t (:foreground "Orange" :background "None"))) 'now)
- '(diff-context     ((t (:foreground "Grey50" :background "None"))) 'now)
- '(diff-hunk-header ((t (:foreground "Purple" :background "None"))) 'now)
- '(diff-header      ((t (:foreground "Blue"   :background "None"))) 'now)
- ;; diff-changed
- ;; diff-context
- ;; diff-index
- ;; diff-indicator-added
- ;; diff-indicator-changed
- ;; diff-indicator-removed
- ;; diff-nonexistent
-
- '(font-lock-function-name-face ((t (:foreground "#0070FF"))) 'now)
- '(font-lock-variable-name-face ((t (:foreground "DarkOrange3"))) 'now)
- '(font-lock-comment-face       ((t (:foreground "Red3"))) 'now)
- '(font-lock-string-face        ((t (:foreground "MediumOrchid"))) 'now)
- '(font-lock-keyword-face       ((t (:foreground "MediumOrchid"))) 'now)
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  )
-
-(set-face-foreground 'minibuffer-prompt "#0070FF")
